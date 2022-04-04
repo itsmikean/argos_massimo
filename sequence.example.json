@@ -1,0 +1,72 @@
+{
+    "$argos": "sequence",
+    "description": "Export test",
+    "steps": [
+      {
+        "description": "User authentication",
+        "message": {
+          "type": "authenticate",
+          "email": "${email}",
+          "password": "${password}"
+        },
+        "verifications": [
+          {
+            "description": "It should authenticate the user",
+            "type": "PATH",
+            "path": "type",
+            "value": "authenticate.ok",
+            "save": {
+              "value": false
+            }
+          }
+        ]
+      },
+      {
+        "description": "Request an export",
+        "message": {
+          "type": "author.element.export.request",
+          "elementId": "${elementId}",
+          "elementType": "${elementType}"
+        },
+        "verifications": [
+          {
+            "description": "It should sucessfully submit an export request",
+            "type": "PATH",
+            "path": "type",
+            "value": "author.element.export.request.ok",
+            "save": {
+              "value": false
+            }
+          },
+          {
+            "description": "Store the exportId as a variable",
+            "type": "PATH",
+            "path": "response.exportId",
+            "value": "@any()@",
+            "save": {
+              "value": true,
+              "name": "exportId"
+            }
+          }
+        ]
+      },
+      {
+        "description": "Subscribe to the export",
+        "message": {
+          "type": "author.export.subscribe",
+          "exportId": "${exportId}"
+        },
+        "verifications": [
+          {
+            "description": "It should sucessfully subscribe to the export (remember to unsubscribe)",
+            "type": "PATH",
+            "path": "type",
+            "value": "author.export.subscribe.ok",
+            "save": {
+              "value": false
+            }
+          }
+        ]
+      }
+    ]
+  }
